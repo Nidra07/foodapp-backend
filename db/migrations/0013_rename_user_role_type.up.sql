@@ -1,0 +1,1 @@
+ALTER TYPE user_role RENAME TO user_role_type;
