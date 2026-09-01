@@ -5,7 +5,7 @@ sql:
     queries: "db/queries"
     schema: "db/migrations"
 
-        gen:
+     gen:
       go:
         package: "sqlc"
         out: "internal/platform/db/sqlc"
