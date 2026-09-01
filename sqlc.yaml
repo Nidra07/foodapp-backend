@@ -5,7 +5,7 @@ sql:
     queries: "db/queries"
     schema: "db/migrations"
 
-    gen:
+        gen:
       go:
         package: "sqlc"
         out: "internal/platform/db/sqlc"
@@ -14,6 +14,9 @@ sql:
         emit_interface: true
         emit_exact_table_names: false
         emit_pointers_for_null_types: true
+
+        rename:
+          user_roles: UserRoleAssignment
 
         overrides:
           - db_type: "uuid"
