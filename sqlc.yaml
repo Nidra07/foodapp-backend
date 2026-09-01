@@ -29,8 +29,3 @@ sql:
             go_type:
               type: "byte"
               slice: true
-
-overrides:
-  go:
-    rename:
-      user_role: UserRoleAssignment
