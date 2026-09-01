@@ -20,23 +20,42 @@ SELECT * FROM restaurants WHERE owner_user_id = $1 AND deleted_at IS NULL ORDER 
 -- name: ListNearbyRestaurants :many
 -- Distance search using PostGIS. Only returns restaurants that are
 -- approved, accepting orders, and within their own service radius of the
--- customer's point (not just within the search radius param) — a
--- restaurant 8km away with a 5km service area should not show up even if
--- the customer's search radius is 10km.
+-- customer's point.
 SELECT r.*,
-       ST_Distance(r.location, ST_SetSRID(ST_MakePoint(sqlc.arg(lng)::float8, sqlc.arg(lat)::float8), 4326)::geography) / 1000.0 AS distance_km
+       ST_Distance(
+           r.location,
+           ST_SetSRID(
+               ST_MakePoint(
+                   CAST(sqlc.arg(lng) AS DOUBLE PRECISION),
+                   CAST(sqlc.arg(lat) AS DOUBLE PRECISION)
+               ),
+               4326
+           )::geography
+       ) / 1000.0 AS distance_km
 FROM restaurants r
-JOIN restaurant_service_areas sa ON sa.restaurant_id = r.id AND sa.is_active = true
+JOIN restaurant_service_areas sa
+  ON sa.restaurant_id = r.id
+ AND sa.is_active = true
 WHERE r.deleted_at IS NULL
   AND r.status = 'approved'
   AND r.is_accepting_orders = true
   AND ST_DWithin(
-        r.location,
-        ST_SetSRID(ST_MakePoint(sqlc.arg(lng)::float8, sqlc.arg(lat)::float8), 4326)::geography,
-        LEAST(sqlc.arg(search_radius_m)::float8, sa.radius_km * 1000)
+      r.location,
+      ST_SetSRID(
+          ST_MakePoint(
+              CAST(sqlc.arg(lng) AS DOUBLE PRECISION),
+              CAST(sqlc.arg(lat) AS DOUBLE PRECISION)
+          ),
+          4326
+      )::geography,
+      LEAST(
+          CAST(sqlc.arg(search_radius_m) AS DOUBLE PRECISION),
+          sa.radius_km * 1000
       )
+  )
 ORDER BY distance_km ASC
-LIMIT $3 OFFSET $4;
+LIMIT sqlc.arg(limit_count)::int
+OFFSET sqlc.arg(offset_count)::int;
 
 -- name: ListRestaurantsForAdmin :many
 SELECT * FROM restaurants
