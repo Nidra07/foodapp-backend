@@ -1,8 +1,10 @@
 version: "2"
+
 sql:
   - engine: "postgresql"
     queries: "db/queries"
     schema: "db/migrations"
+
     gen:
       go:
         package: "sqlc"
@@ -12,14 +14,15 @@ sql:
         emit_interface: true
         emit_exact_table_names: false
         emit_pointers_for_null_types: true
-              overrides:
-        - db_type: "uuid"
-          go_type: "github.com/google/uuid.UUID"
 
-        - db_type: "timestamptz"
-          go_type: "time.Time"
+        overrides:
+          - db_type: "uuid"
+            go_type: "github.com/google/uuid.UUID"
 
-        - db_type: "geography"
-          go_type:
-            type: "byte"
-            slice: true
+          - db_type: "timestamptz"
+            go_type: "time.Time"
+
+          - db_type: "geography"
+            go_type:
+              type: "byte"
+              slice: true
