@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS restaurant_service_areas;
+DROP TABLE IF EXISTS restaurant_operating_hours;
+DROP TABLE IF EXISTS restaurant_documents;
+DROP TYPE IF EXISTS document_type;
+DROP TABLE IF EXISTS restaurant_staff;
+DROP TYPE IF EXISTS staff_permission;
+DROP TRIGGER IF EXISTS trg_restaurants_updated_at ON restaurants;
+DROP TABLE IF EXISTS restaurants;
+DROP TYPE IF EXISTS kyc_status;
+DROP TYPE IF EXISTS restaurant_status;
