@@ -33,4 +33,4 @@ sql:
 overrides:
   go:
     rename:
-      user_roles: UserRoleAssignment
+      user_role: UserRoleAssignment
